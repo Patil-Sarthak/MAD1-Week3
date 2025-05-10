@@ -1,14 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student & Course Dashboard</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; display: flex; height: 100vh; }
+        .sidebar {
+            width: 250px;
+            background: #1f1f1f;
+            color: #fff;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .sidebar h3 { margin-top: 20px; border-bottom: 1px solid #444; padding-bottom: 5px; }
+        .item { cursor: pointer; margin: 5px 0; padding: 5px; border-radius: 4px; transition: background 0.3s; }
+        .item:hover { background: #333; }
+        .search {
+            width: 100%; padding: 5px; margin-bottom: 10px; border: none;
+            border-radius: 4px; font-size: 14px;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f9f9f9;
+            transition: all 0.3s;
+        }
+        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        img { margin-top: 10px; max-width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <input type="text" id="searchBox" class="search" placeholder="Search IDs..." onkeyup="filterList()">
+        <h3>Students</h3>
+        <div id="students">
+            
+                <div class="item" onclick="showStudent('01')">01</div>
+            
+                <div class="item" onclick="showStudent('02')">02</div>
+            
+                <div class="item" onclick="showStudent('03')">03</div>
+            
+                <div class="item" onclick="showStudent('04')">04</div>
+            
+                <div class="item" onclick="showStudent('05')">05</div>
+            
+                <div class="item" onclick="showStudent('06')">06</div>
+            
+                <div class="item" onclick="showStudent('07')">07</div>
+            
+                <div class="item" onclick="showStudent('08')">08</div>
+            
+                <div class="item" onclick="showStudent('09')">09</div>
+            
+                <div class="item" onclick="showStudent('10')">10</div>
+            
+                <div class="item" onclick="showStudent('11')">11</div>
+            
+                <div class="item" onclick="showStudent('12')">12</div>
+            
+                <div class="item" onclick="showStudent('13')">13</div>
+            
+                <div class="item" onclick="showStudent('14')">14</div>
+            
+                <div class="item" onclick="showStudent('15')">15</div>
+            
+                <div class="item" onclick="showStudent('16')">16</div>
+            
+                <div class="item" onclick="showStudent('17')">17</div>
+            
+        </div>
+        <h3>Courses</h3>
+        <div id="courses">
+            
+                <div class="item" onclick="showCourse('CS01')">CS01</div>
+            
+                <div class="item" onclick="showCourse('CS02')">CS02</div>
+            
+                <div class="item" onclick="showCourse('CS03')">CS03</div>
+            
+        </div>
+    </div>
+    <div class="content" id="result">
+        <h2>📊 Select a student or course ID to view details.</h2>
+    </div>
 
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Something Went Wrong</title>
-    </head>
-    <body>
-        <h1>Wrong Inputs</h1>
-        <p>Something went wrong</p>
-    </body>
-    </html>
-    
+    <script>
+        const studentData = {"01": [["CS01", 85], ["CS02", 78]], "02": [["CS01", 92], ["CS03", 88]], "03": [["CS01", 75]], "04": [["CS02", 64]], "05": [["CS03", 90]], "06": [["CS01", 83]], "07": [["CS02", 70]], "08": [["CS03", 76]], "09": [["CS01", 80]], "10": [["CS02", 89]], "11": [["CS03", 54]], "12": [["CS03", 57]], "13": [["CS01", 24]], "14": [["CS02", 15]], "15": [["CS03", 84]], "16": [["CS01", 98]], "17": [["CS02", 20]]};
+        const courseData = {"CS01": [85, 92, 75, 83, 80, 24, 98], "CS02": [78, 64, 70, 89, 15, 20], "CS03": [88, 90, 76, 54, 57, 84]};
+
+        function showStudent(sid) {
+            const list = studentData[sid];
+            let total = 0;
+            let html = `<h2>🎓 Student ID: ${sid}</h2><table><tr><th>Course</th><th>Marks</th></tr>`;
+            for (const [cid, mark] of list) {
+                html += `<tr><td>${cid}</td><td>${mark}</td></tr>`;
+                total += mark;
+            }
+            html += `<tr><td><strong>Total</strong></td><td><strong>${total}</strong></td></tr></table>`;
+            document.getElementById("result").innerHTML = html;
+        }
+
+        function showCourse(cid) {
+            const marks = courseData[cid];
+            const total = marks.reduce((a, b) => a + b, 0);
+            const avg = (total / marks.length).toFixed(2);
+            const max = Math.max(...marks);
+            let html = `<h2>📘 Course ID: ${cid}</h2>
+                        <p><strong>Average:</strong> ${avg}</p>
+                        <p><strong>Maximum:</strong> ${max}</p>
+                        <img src="hist_${cid}.png" alt="Histogram for ${cid}">`;
+            document.getElementById("result").innerHTML = html;
+        }
+
+        function filterList() {
+            const filter = document.getElementById('searchBox').value.toLowerCase();
+            ['students', 'courses'].forEach(section => {
+                const items = document.getElementById(section).getElementsByClassName('item');
+                for (let i = 0; i < items.length; i++) {
+                    const txt = items[i].innerText.toLowerCase();
+                    items[i].style.display = txt.includes(filter) ? "" : "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
